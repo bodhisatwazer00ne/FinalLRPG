@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Default Deny Catch-All: Block any unmapped paths or administrative leaks
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Connectivity verification path
+    match /test/{testId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // 3. Trainer Accounts (Credential Registry)
+    match /trainerAccounts/{accountId} {
+      allow read, write, delete: if true;
+    }
+
+    // 4. User Profile & Private Life Game State
+    match /users/{userId} {
+      allow read, write, delete: if true;
+    }
+
+    // 5. Unique Username Registry
+    match /usernames/{usernameLower} {
+      allow read, write, delete: if true;
+    }
+
+    // 6. Public Trainer Directory (Arena Matchmaking & Leaderboard)
+    match /publicTrainers/{userId} {
+      allow read, write, delete: if true;
+    }
+
+    // 7. Real-Time Duel Challenges
+    match /challenges/{challengeId} {
+      allow read, write, delete: if true;
+    }
+
+    // 8. Real-Time Turn-Based Multiplayer Arena Battles
+    match /activeBattles/{battleId} {
+      allow read, write, delete: if true;
+    }
+  }
+}
+
